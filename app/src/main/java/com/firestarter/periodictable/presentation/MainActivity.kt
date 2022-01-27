@@ -8,6 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.firestarter.periodictable.presentation.chemical_element_details.components.IonizationEnergies2
 import com.firestarter.periodictable.presentation.ui.theme.PeriodicTableTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,22 +18,9 @@ class MainActivity : ComponentActivity() {
             PeriodicTableTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
+                    IonizationEnergies2()
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    PeriodicTableTheme {
-        Greeting("Android")
     }
 }
