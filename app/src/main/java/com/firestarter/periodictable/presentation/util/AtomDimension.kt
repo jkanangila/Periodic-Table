@@ -1,17 +1,19 @@
 package com.firestarter.periodictable.presentation.util
 
-import androidx.compose.ui.unit.dp
 
 object AtomDimension {
-    val ShellSpacing = mapOf(
-        7 to 35,
-        6 to 40,
-        5 to 45,
-        4 to 50,
-        3 to 55,
-        2 to 60,
-        1 to 65
-    )
+
+    fun shellSpacing(period: Int) = when (period) {
+        7 -> 35
+        6 -> 40
+        5 -> 45
+        4 -> 50
+        3 -> 55
+        2 -> 60
+        1 -> 65
+        else -> 0
+    }
+
     const val ShellThickness = 6F
 
     fun electronRadius(period: Int) = run {

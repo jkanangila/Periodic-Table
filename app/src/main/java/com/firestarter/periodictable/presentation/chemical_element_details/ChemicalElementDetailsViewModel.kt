@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firestarter.periodictable.domain.model.ElementDetails
+import com.firestarter.periodictable.data.data_source.entity.ChemicalElementDetails
 import com.firestarter.periodictable.domain.use_case.UseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ class ChemicalElementDetailsViewModel @Inject constructor(
 
     companion object {
         data class ElementState(
-            val elementDetails: ElementDetails? = null
+            val elementDetails: ChemicalElementDetails? = null
         )
     }
 }

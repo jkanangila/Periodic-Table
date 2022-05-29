@@ -4,7 +4,6 @@ import android.app.Application
 import com.firestarter.periodictable.data.data_source.PeriodicTableDataBase
 import com.firestarter.periodictable.data.repository.ChemicalElementRepositoryImpl
 import com.firestarter.periodictable.domain.repository.ChemicalElementsRepository
-import com.firestarter.periodictable.domain.use_case.ElectronConfigurationShell
 import com.firestarter.periodictable.domain.use_case.GetChemicalElement
 import com.firestarter.periodictable.domain.use_case.GetChemicalElementDetails
 import com.firestarter.periodictable.domain.use_case.UseCases
@@ -32,16 +31,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideElectronConfigurationUseCase(): ElectronConfigurationShell {
-        return ElectronConfigurationShell()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUsesCases(repository: ChemicalElementsRepository, usesCase: ElectronConfigurationShell): UseCases{
+    fun provideUsesCases(repository: ChemicalElementsRepository): UseCases{
         return UseCases(
             getChemicalElement = GetChemicalElement(repository),
-            getChemicalElementDetails = GetChemicalElementDetails(repository, usesCase)
+            getChemicalElementDetails = GetChemicalElementDetails(repository)
         )
     }
 }

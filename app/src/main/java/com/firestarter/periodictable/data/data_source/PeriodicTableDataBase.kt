@@ -8,9 +8,11 @@ import androidx.annotation.RequiresApi
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.firestarter.periodictable.R
-import com.firestarter.periodictable.data.data_source.entity.ElementDetailsEntity
+import com.firestarter.periodictable.data.data_source.converters.Converters
+import com.firestarter.periodictable.data.data_source.entity.ChemicalElementDetails
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -21,10 +23,11 @@ import org.json.JSONException
 import java.io.IOException
 
 @Database(
-    entities = [ElementDetailsEntity::class],
+    entities = [ChemicalElementDetails::class],
     exportSchema = false,
     version = 1
 )
+@TypeConverters(Converters::class)
 abstract class PeriodicTableDataBase: RoomDatabase() {
 
     abstract val dao: PeriodicTableDao
@@ -80,7 +83,7 @@ abstract class PeriodicTableDataBase: RoomDatabase() {
             }
         }
 
-        private fun loadJSONData(context: Context?): List<ElementDetailsEntity>?{
+        private fun loadJSONData(context: Context?): List<ChemicalElementDetails>?{
 
             val jsonString: String
 
@@ -89,7 +92,7 @@ abstract class PeriodicTableDataBase: RoomDatabase() {
                     .openRawResource(R.raw.periodic_table)
                     .bufferedReader().use { it.readText() }
 
-                val listContactTypes = object: TypeToken<List<ElementDetailsEntity>>(){}.type
+                val listContactTypes = object: TypeToken<List<ChemicalElementDetails>>(){}.type
 
                 return Gson().fromJson(jsonString, listContactTypes)
 

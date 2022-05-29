@@ -1,9 +1,8 @@
 package com.firestarter.periodictable.domain.use_case
 
 import com.firestarter.periodictable.domain.model.ElectronDistribution
-import com.firestarter.periodictable.domain.util.BoxNotation
 
-class ElectronConfigurationShell {
+object ElectronConfigurationShell {
 
     fun boxNotation(electronConfiguration: String): Map<Int, List<ElectronDistribution>>{
         // e.g. electronConfiguration = "1s2 2s2 2p6 3s1"
@@ -16,8 +15,8 @@ class ElectronConfigurationShell {
             val period = it[0].toString().toInt()
             if (boxNotation[period].isNullOrEmpty()){
                 boxNotation[period] = mutableListOf(electronDistributionSubshell(it))
-            // simply append otherwise append
             } else {
+                // simply append otherwise append
                 boxNotation[period]?.add(electronDistributionSubshell(it))
             }
         }
@@ -30,7 +29,7 @@ class ElectronConfigurationShell {
 
         spdfString.split(" ").forEach {
             val period = it[0].toString().toInt()
-            if (electronsMap[period].isNullOrEmpty()){
+            if (electronsMap[period].isNullOrEmpty()) {
                 electronsMap[period] = mutableListOf(
                     spdfString.subSequence(2, spdfString.length).toString().toInt()
                 )
@@ -48,10 +47,20 @@ class ElectronConfigurationShell {
         return electrons
     }
 
+    private fun numberOrbitalsPerSubShell(orbital: String) = when(orbital) {
+        "s" -> 1
+        "p" -> 3
+        "d" -> 5
+        "f" -> 7
+        "g" -> 9
+        "h" -> 11
+        else -> 0
+    }
+
     private fun electronDistributionSubshell(spdfString: String): ElectronDistribution{
         val numberElectrons = spdfString.subSequence(2, spdfString.length).toString().toInt()
         val subShellType = spdfString[1]
-        val numberOrbitals = BoxNotation.SubshellToOrbital[subShellType.toString()]!!
+        val numberOrbitals = numberOrbitalsPerSubShell(subShellType.toString())
 
         return when{
             numberElectrons <= numberOrbitals -> {

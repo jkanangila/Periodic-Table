@@ -2,8 +2,8 @@ package com.firestarter.periodictable.domain.util
 
 import com.firestarter.periodictable.presentation.ui.theme.*
 
-object ElementColorMap {
-    val COLOR = mapOf(
+object ColorMap {
+    val groupBlockColor = mapOf(
         "alkali metal" to MainGroupMetals,
         "alkaline earth metal" to MainGroupMetals,
         "metal" to MainGroupMetals,

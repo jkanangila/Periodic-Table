@@ -1,17 +1,16 @@
 package com.firestarter.periodictable.domain.use_case
 
-import com.firestarter.periodictable.domain.model.Element
+import androidx.compose.ui.graphics.Color
+import com.firestarter.periodictable.domain.model.ChemicalElement
 import com.firestarter.periodictable.domain.repository.ChemicalElementsRepository
-import com.firestarter.periodictable.domain.util.ElementColorMap
+import com.firestarter.periodictable.domain.util.ColorMap
 
 class GetChemicalElement(
     private val repository: ChemicalElementsRepository
 ) {
-    suspend operator fun invoke(number: Int): Element{
+    suspend operator fun invoke(number: Int): ChemicalElement{
         val element = repository.getChemicalElement(number)
-
-        // Add Color
-//        element.color = ElementColorMap.COLOR[element.groupBlock]!!
+        element.color = ColorMap.groupBlockColor[element.groupBlock] ?: Color.White
 
         return element
     }

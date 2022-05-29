@@ -1,7 +1,9 @@
 package com.firestarter.periodictable.presentation.chemical_element_details.components
 
+import android.graphics.Color.parseColor
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -11,28 +13,53 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.firestarter.periodictable.presentation.ui.theme.PeriodicTableTheme
 import com.firestarter.periodictable.presentation.util.AtomDimension
 import com.firestarter.periodictable.util.Constants
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
+@Preview(showBackground = true)
+@Composable
+fun AtomPreview() {
+    PeriodicTableTheme{
+        Box(
+            modifier = Modifier.padding(10.dp),
+            contentAlignment = Alignment.Center, ){
+                Atom(
+                    symbol = "F",
+                    electronsPerShell = listOf(2, 7),
+                    cpkHex = "90e050"
+                )
+        }
+    }
+}
+
+
 @Composable
 fun Atom(
     symbol: String,
-    electrons: List<Int>,
+    electronsPerShell: List<Int>,
     cpkHex: String
 ) {
+    val bgColor = if (cpkHex.isNotEmpty()) Color(parseColor("#$cpkHex")) else Red
+
     Box(contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.size(Constants.figureSize)){
             val center = size.center
             val radius = size.minDimension / 2
 
-            val period = electrons.size
-            val spacing = AtomDimension.ShellSpacing[period]!!
+            val period = electronsPerShell.size
+            val spacing = AtomDimension.shellSpacing(period)
 
             // radius of nucleus and increment to other shells shells
             val nucleusRadius = radius - ((period + 1) * spacing)
@@ -43,14 +70,9 @@ fun Atom(
 
             // Draw Nucleus
             drawCircle(
-                color = Color.Red,
+                brush = Brush.linearGradient(listOf(White, bgColor, Black)),
                 center = center,
-                radius = nucleusRadius // 200
-            )
-            drawCircle(
-                brush = Brush.radialGradient(colors = listOf(Color.Transparent, Color.White)),
-                center = center,
-                radius = nucleusRadius // 200
+                radius = nucleusRadius
             )
 
             // Draw Inner circles
@@ -63,8 +85,8 @@ fun Atom(
                     radius = radiusInner
                 )
                 // Draw electrons on inner circles
-                repeat(electrons[idx]){
-                    val angleIncrement = (2 * PI) / electrons[idx]
+                repeat(electronsPerShell[idx]) {
+                    val angleIncrement = (2 * PI) / electronsPerShell[idx]
                     val xCord = center.x - radiusInner * cos(PI/2 + angleIncrement * it)
                     val yCord = center.y - radiusInner * sin(PI/2 + angleIncrement * it)
 
@@ -87,8 +109,8 @@ fun Atom(
                 radius = radius
             )
             // Draw electrons on outermost circles
-            repeat(electrons.last()){
-                val angleIncrement = (2 * PI) / electrons.last()
+            repeat(electronsPerShell.last()){
+                val angleIncrement = (2 * PI) / electronsPerShell.last()
                 val xCord = center.x - radius * cos(PI/2 + angleIncrement * it)
                 val yCord = center.y - radius * sin(PI/2 + angleIncrement * it)
 
@@ -103,7 +125,7 @@ fun Atom(
             }
         }
 
-        Text(text = symbol, fontSize = 24.sp, color = Color.White, fontWeight = FontWeight.Black)
+        Text(text = symbol, fontSize = 24.sp, color = White, fontWeight = FontWeight.Black)
 
     }
 }
