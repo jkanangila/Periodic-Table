@@ -11,9 +11,6 @@ class GetChemicalElementDetails(
         // Add electron configuration
         elementDetails.electronConfigurationBoxNotation = ElectronConfigurationShell
             .boxNotation(elementDetails.electronConfiguration)
-        // Add list of electrons per shell
-        elementDetails.electronsPerShell = ElectronConfigurationShell
-            .numberElectronsPerShell(elementDetails.electronConfiguration)
 
         return elementDetails
     }

@@ -23,30 +23,6 @@ object ElectronConfigurationShell {
         return boxNotation
     }
 
-    fun numberElectronsPerShell(spdfString: String): List<Int>{
-        val electronsMap = mutableMapOf<Int, MutableList<Int>>()
-        val electrons = mutableListOf<Int>()
-
-        spdfString.split(" ").forEach {
-            val period = it[0].toString().toInt()
-            if (electronsMap[period].isNullOrEmpty()) {
-                electronsMap[period] = mutableListOf(
-                    spdfString.subSequence(2, spdfString.length).toString().toInt()
-                )
-            } else{
-                electronsMap[period]!!.add(
-                    spdfString.subSequence(2, spdfString.length).toString().toInt()
-                )
-            }
-        }
-
-        electronsMap.forEach {
-            electrons.add(it.value.sum())
-        }
-
-        return electrons
-    }
-
     private fun numberOrbitalsPerSubShell(orbital: String) = when(orbital) {
         "s" -> 1
         "p" -> 3

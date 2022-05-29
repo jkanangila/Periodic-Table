@@ -1,6 +1,43 @@
-package com.firestarter.periodictable.presentation.util
+package com.firestarter.periodictable.util
 
-object ElementIndex {
+import com.firestarter.periodictable.presentation.ui.theme.*
+
+object Atoms {
+
+    fun shellSpacing(period: Int) = when (period) {
+        7 -> 35
+        6 -> 40
+        5 -> 45
+        4 -> 50
+        3 -> 55
+        2 -> 60
+        1 -> 65
+        else -> 0
+    }
+
+    const val ShellThickness = 6F
+
+    fun electronRadius(period: Int) = when {
+        period < 3 -> 20F
+        period in 3..4 -> 15F
+        period in 5..6 -> 10F
+        else -> 8F
+    }
+
+    val groupBlockColor = mapOf(
+        "alkali metal" to MainGroupMetals,
+        "alkaline earth metal" to MainGroupMetals,
+        "metal" to MainGroupMetals,
+        "transition metal" to TransitionMetals,
+        "metalloid" to Metalloids,
+        "nonmetal" to NonMetals,
+        "halogen" to NonMetals,
+        "noble gas" to NobleGas,
+        "lanthanoid" to TransUranium,
+        "actinoid" to TransUranium,
+        "post-transition metal" to TransUranium
+    )
+
     // EACH ENTRY CORRESPONDS TO A COLUMN
     val GROUP_1A_2A = listOf(
         listOf(1,null),
@@ -86,5 +123,53 @@ object ElementIndex {
 
     val ACTINIDES = listOf(
         90,91,92,93,94,95,96,97,98,99,100,101,102,103
+    )
+
+    data class AtomModel(
+        val symbol: String,
+        val electronsPerShel: List<Int>,
+        val cpkHex: String
+    )
+
+    val period1 = AtomModel(
+        symbol = "He",
+        electronsPerShel = listOf(2),
+        cpkHex = "d9ffff",
+    )
+
+    val period2 = AtomModel(
+        symbol = "C",
+        electronsPerShel = listOf(2, 4),
+        cpkHex = "909090"
+    )
+
+    val period3 = AtomModel(
+        symbol = "S",
+        electronsPerShel = listOf(2, 8, 6),
+        cpkHex = "ffff30"
+    )
+
+    val period4 = AtomModel(
+        symbol = "Cr",
+        electronsPerShel = listOf(2, 8, 13, 1),
+        cpkHex = "8a99c7"
+    )
+
+    val period5 = AtomModel(
+        symbol = "Rb",
+        electronsPerShel = listOf(2, 8, 18, 8, 1),
+        cpkHex = "702eb0"
+    )
+
+    val period6 = AtomModel(
+        symbol = "Pm",
+        electronsPerShel = listOf(2, 8, 18, 23, 8, 2),
+        cpkHex = "a3ffc7"
+    )
+
+    val period7 = AtomModel(
+        symbol = "Pu",
+        electronsPerShel = listOf(2, 8, 18, 32, 24, 8, 2),
+        cpkHex = "006bff"
     )
 }

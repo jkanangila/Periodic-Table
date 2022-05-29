@@ -2,9 +2,8 @@ package com.firestarter.periodictable.presentation.chemical_element_details.comp
 
 import android.graphics.Color.parseColor
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,44 +13,27 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.firestarter.periodictable.presentation.ui.theme.PeriodicTableTheme
-import com.firestarter.periodictable.presentation.util.AtomDimension
+import com.firestarter.periodictable.util.Atoms.ShellThickness
+import com.firestarter.periodictable.util.Atoms.electronRadius
+import com.firestarter.periodictable.util.Atoms.shellSpacing
 import com.firestarter.periodictable.util.Constants
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-@Preview(showBackground = true)
-@Composable
-fun AtomPreview() {
-    PeriodicTableTheme{
-        Box(
-            modifier = Modifier.padding(10.dp),
-            contentAlignment = Alignment.Center, ){
-                Atom(
-                    symbol = "F",
-                    electronsPerShell = listOf(2, 7),
-                    cpkHex = "90e050"
-                )
-        }
-    }
-}
-
-
 @Composable
 fun Atom(
     symbol: String,
-    electronsPerShell: List<Int>,
+    electronsPerShell: List<Int>, // shells -> chemical_element_details
     cpkHex: String
 ) {
     val bgColor = if (cpkHex.isNotEmpty()) Color(parseColor("#$cpkHex")) else Red
+    val electronColor = DarkGray
+    val lineColor = DarkGray
 
     Box(contentAlignment = Alignment.Center) {
         Canvas(modifier = Modifier.size(Constants.figureSize)){
@@ -59,14 +41,14 @@ fun Atom(
             val radius = size.minDimension / 2
 
             val period = electronsPerShell.size
-            val spacing = AtomDimension.shellSpacing(period)
+            val spacing = shellSpacing(period)
 
             // radius of nucleus and increment to other shells shells
             val nucleusRadius = radius - ((period + 1) * spacing)
             val increment = (radius - nucleusRadius) / period
 
             // radius of electrons on each shell
-            val electronRadius = AtomDimension.electronRadius(period)
+            val electronRadius = electronRadius(period)
 
             // Draw Nucleus
             drawCircle(
@@ -79,8 +61,8 @@ fun Atom(
             repeat(period - 1){ idx ->
                 val radiusInner = nucleusRadius + increment * (idx + 1)
                 drawCircle(
-                    style = Stroke(width = AtomDimension.ShellThickness),
-                    color = Color.DarkGray,
+                    style = Stroke(width = ShellThickness),
+                    color = lineColor,
                     center = center,
                     radius = radiusInner
                 )
@@ -91,7 +73,7 @@ fun Atom(
                     val yCord = center.y - radiusInner * sin(PI/2 + angleIncrement * it)
 
                     drawCircle(
-                        color = Color.DarkGray,
+                        color = electronColor,
                         radius = electronRadius,
                         center = Offset(
                             x = xCord.toFloat(),
@@ -103,8 +85,8 @@ fun Atom(
 
             // Draw outermost circle
             drawCircle(
-                style = Stroke(width = AtomDimension.ShellThickness),
-                color = Color.DarkGray,
+                style = Stroke(width = ShellThickness),
+                color = lineColor,
                 center = center,
                 radius = radius
             )
@@ -115,7 +97,7 @@ fun Atom(
                 val yCord = center.y - radius * sin(PI/2 + angleIncrement * it)
 
                 drawCircle(
-                    color = Color.DarkGray,
+                    color = electronColor,
                     radius = electronRadius,
                     center = Offset(
                         x = xCord.toFloat(),
@@ -125,7 +107,23 @@ fun Atom(
             }
         }
 
-        Text(text = symbol, fontSize = 24.sp, color = White, fontWeight = FontWeight.Black)
+        val typography = when (electronsPerShell.size) {
+            1 -> MaterialTheme.typography.h2
+            2 -> MaterialTheme.typography.h3
+            3 -> MaterialTheme.typography.h3
+            4 -> MaterialTheme.typography.h4
+            5 -> MaterialTheme.typography.h6
+            6 -> MaterialTheme.typography.body1
+            7 -> MaterialTheme.typography.body1
+            else -> MaterialTheme.typography.body1
+        }
+
+        Text(
+            text = symbol,
+            style = typography.copy(
+                color = White
+            )
+        )
 
     }
 }

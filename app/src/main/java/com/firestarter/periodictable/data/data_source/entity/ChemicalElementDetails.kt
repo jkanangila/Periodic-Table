@@ -60,5 +60,4 @@ data class ChemicalElementDetails @JvmOverloads constructor(
     @SerializedName("ypos")
     val yPos: Int,
     @Transient @Ignore var electronConfigurationBoxNotation: Map<Int, List<ElectronDistribution>>? = null,
-    @Transient @Ignore var electronsPerShell: List<Int>? = null,
 )
