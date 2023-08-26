@@ -13,17 +13,32 @@ import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.ColorUtils
+import com.firestarter.periodictable.presentation.ui.theme.Dimens.atomNucleusSize
+import com.firestarter.periodictable.presentation.ui.theme.Dimens.paddingLarge
 import com.firestarter.periodictable.util.Atoms.ShellThickness
 import com.firestarter.periodictable.util.Atoms.electronRadius
+import com.firestarter.periodictable.util.Atoms.period3
 import com.firestarter.periodictable.util.Atoms.shellSpacing
-import com.firestarter.periodictable.util.Constants
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+
+@Preview(showBackground = true)
+@Composable
+fun AtomPreview() {
+    Box(modifier = Modifier.padding(paddingLarge)) {
+        Atom(
+            symbol = period3.symbol,
+            electronsPerShell = period3.electronsPerShel,
+            cpkHex = period3.cpkHex
+        )
+    }
+}
 
 @Composable
 fun Atom(
@@ -31,12 +46,11 @@ fun Atom(
     electronsPerShell: List<Int>, // shells -> chemical_element_details
     cpkHex: String
 ) {
-    val bgColor = if (cpkHex.isNotEmpty()) Color(parseColor("#$cpkHex")) else Red
-    val electronColor = DarkGray
-    val lineColor = DarkGray
+    val cpkColor = Color(parseColor("#$cpkHex"))
+    val lineColor = Color(parseColor("#4e5063"))
 
     Box(contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier.size(Constants.figureSize)){
+        Canvas(modifier = Modifier.size(atomNucleusSize)){
             val center = size.center
             val radius = size.minDimension / 2
 
@@ -52,7 +66,22 @@ fun Atom(
 
             // Draw Nucleus
             drawCircle(
-                brush = Brush.linearGradient(listOf(White, bgColor, Black)),
+                brush = Brush.radialGradient(
+                    colors = listOf(
+                        Color(
+                            ColorUtils.blendARGB(cpkColor.toArgb(), White.toArgb(), .4f)
+                        ),
+                        cpkColor,
+                        Color(
+                            ColorUtils.blendARGB(cpkColor.toArgb(), Black.toArgb(), .5f)
+                        )
+                    ),
+                    center = Offset(
+                        center.x - nucleusRadius * .8f,
+                        center.y - nucleusRadius * .8f,
+                    ),
+//                    radius = (circleRadius * .1).toFloat()
+                ),
                 center = center,
                 radius = nucleusRadius
             )
@@ -73,7 +102,17 @@ fun Atom(
                     val yCord = center.y - radiusInner * sin(PI/2 + angleIncrement * it)
 
                     drawCircle(
-                        color = electronColor,
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color(parseColor("#02386e")),
+                                Color(parseColor("#00264d")),
+                                Color(parseColor("#00172d")),
+                            ),
+                            center = Offset(
+                                center.x - electronRadius * .5f,
+                                center.y - electronRadius * .5f,
+                            ),
+                        ),
                         radius = electronRadius,
                         center = Offset(
                             x = xCord.toFloat(),
@@ -97,7 +136,17 @@ fun Atom(
                 val yCord = center.y - radius * sin(PI/2 + angleIncrement * it)
 
                 drawCircle(
-                    color = electronColor,
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            Color(parseColor("#02386e")),
+                            Color(parseColor("#00264d")),
+                            Color(parseColor("#00172d")),
+                        ),
+                        center = Offset(
+                            center.x - electronRadius * .5f,
+                            center.y - electronRadius * .5f,
+                        ),
+                    ),
                     radius = electronRadius,
                     center = Offset(
                         x = xCord.toFloat(),
